@@ -160,6 +160,7 @@ docker volume create some-volume
 
 docker volume ls 
 docker volume inspect some-volume
+  # the following line is to remove it if you want
 docker volume rm some-volume
 
 docker run -i -t --name myname -v some-volume:/app ubuntu /bin/bash
@@ -174,6 +175,24 @@ docker load -i my_exported_image.tar
 
 
 #########################################
+
+[root@ip-172-31-20-202 hostdir]# cd
+[root@ip-172-31-20-202 ~]# ls
+containers  Dockerfile  hostdir  index.html
+[root@ip-172-31-20-202 ~]# cd containers/
+[root@ip-172-31-20-202 containers]# ls
+simple
+[root@ip-172-31-20-202 containers]# cd simple/
+[root@ip-172-31-20-202 simple]# ls
+Dockerfile  index.html
+[root@ip-172-31-20-202 simple]# vim docker-compose.yml
+[root@ip-172-31-20-202 simple]# ls
+docker-compose.yml  Dockerfile  index.html
+[root@ip-172-31-20-202 simple]# 
+
+#
+
+
 #########  DOCKER COMPOSE
 #########################################
 
@@ -209,8 +228,11 @@ networks:
 
 #########################################
 
+
 docker-compose up --build --no-start
 docker-compose start
+  # now you can go to browser and type <public_id of the instance>:8080
+  # check to edit the security rules
 docker-compose stop
 docker-compose down
 docker images
