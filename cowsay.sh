@@ -1,4 +1,5 @@
-##### Launch an ubuntu container
+  ###version 1 to create the image### Launch an ubuntu container
+  # from here
 docker run -i -t ubuntu /bin/bash
 #---from inside the container
 apt-get update
@@ -7,7 +8,9 @@ apt-get install cowsay
 apt-get install lolcat
 export PATH=/usr/games/:$PATH
 fortune | cowsay | lolcat
-######  -------------  exit the container
+# -------------  exit the container
+
+# and then
 
 docker ps -a
 docker commit ef048ccf6bd0  ubuntu_with_fortune
@@ -15,9 +18,10 @@ docker tag ubuntu_with_fortune dcesini/hpqc_2025:ubuntu_with_fortune_1.0
 docker push dcesini/hpqc_2025:ubuntu_with_fortune_1.0
 
 docker run  -e PATH=/usr/games/:${PATH} -e LC_ALL=C  dcesini/hpqc_2025:ubuntu_with_fortune_1.0 /bin/bash -c 'fortune | cowsay | lolcat'
+  #to here
 
-#### Alternatively you can use a Dockerfile
-
+  ###version 2 to create the image### Alternatively you can use a Dockerfile
+  # from here
 cat Dockerfile
 #################################
 FROM ubuntu
@@ -37,11 +41,15 @@ docker run  ubuntu_with_fortune4 /bin/bash -c 'fortune | cowsay | lolcat'
 # OR SIMPLY
 
 docker run  ubuntu_with_fortune4
+  # to here
 
-#######################
 
-# LOGIN TO LEONARDO
+
+
+
+  # LOGIN TO LEONARDO
 # and then
+
 singularity pull docker://dcesini/hpqc_2025:ubuntu_with_fortune_5.0
 ls *.sif
 singularity run hpqc_2025_ubuntu_with_fortune_5.0.sif
