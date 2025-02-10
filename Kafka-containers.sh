@@ -4,6 +4,9 @@
 
 docker pull apache/kafka:3.7.1
 
+    # run this if you find problems with docker
+    usermod -g docker ec2-user
+#
 ########################################################
 ### create the cluster 3 brokers and 3 controllers #####
 ########################################################
