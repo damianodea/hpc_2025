@@ -18,7 +18,9 @@ def getAcc( pos, mass, G, softening ):
 	softening is the softening length
 	a is N x 3 matrix of accelerations
 	"""
-	# positions r = [x,y,z] for all particles
+	# positions r = [x,y,z] for all particles: here we assign the components
+	# pos is a NumPy array with shape (N, 3), where N is the number of particles
+	# 0:1  Selects the first column but keeps it as a 2D array (i.e., shape (N, 1), not (N,))
 	x = pos[:,0:1]
 	y = pos[:,1:2]
 	z = pos[:,2:3]
@@ -32,6 +34,7 @@ def getAcc( pos, mass, G, softening ):
 	inv_r3 = (dx**2 + dy**2 + dz**2 + softening**2)
 	inv_r3[inv_r3>0] = inv_r3[inv_r3>0]**(-1.5)
 
+	# The @ operator performs matrix multiplication
 	ax = G * (dx * inv_r3) @ mass
 	ay = G * (dy * inv_r3) @ mass
 	az = G * (dz * inv_r3) @ mass
@@ -99,13 +102,13 @@ def main():
 	# Convert to Center-of-Mass frame
 	vel -= np.mean(mass * vel,0) / np.mean(mass)
 	
-	# calculate initial gravitational accelerations
+	# calculate initial gravitational accelerations using the getAcc function defined above
 	acc = getAcc( pos, mass, G, softening )
 	
 	# calculate initial energy of system
-	KE, PE  = getEnergy( pos, vel, mass, G )
+	KE, PE = getEnergy( pos, vel, mass, G )
 	
-	# number of timesteps
+	# number of timesteps (assuming that tBeginning = 0)
 	Nt = int(np.ceil(tEnd/dt))
 	
 	# save energies, particle orbits for plotting trails
@@ -123,18 +126,18 @@ def main():
 	ax1 = plt.subplot(grid[0:2,0])
 	ax2 = plt.subplot(grid[2,0])
 	
-	# Simulation Main Loop
+	# Simulation Main Loop that uses Leapfrog scheme
 	for i in range(Nt):
-		# (1/2) kick
+		# (1/2 timestep) kick (Leapfrog first kick)
 		vel += acc * dt/2.0
 		
-		# drift
+		# Leapforg drift (sull timestep)
 		pos += vel * dt
 		
-		# update accelerations
+		# update accelerations: solve gravity for drifted particles positions using direct summation
 		acc = getAcc( pos, mass, G, softening )
 		
-		# (1/2) kick
+		# (1/2) kick (Leapfrog second kick)
 		vel += acc * dt/2.0
 		
 		# update time
